@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"github.com/stuphi/GearGen/gear"
 )
 
@@ -11,13 +12,13 @@ func main() {
 
 	var Centers float64 // Distance between Centers
 	var Ratio float64 // Required Ratio
-	var DriveTeeth float64 // Number of teeth on drive gear
+	var DriveTeeth int // Number of teeth on drive gear
 	var PressureAngle float64
 
-	Centers = 100.0
-	Ratio = 2.0
-	DriveTeeth = 10
-	PressureAngle = 25
+	Centers = 150.0
+	Ratio = 3.0
+	DriveTeeth = 18
+	PressureAngle = 20
 
 	var Gear1 gear.Gear
 	Gear1.Pd = (1 / (Ratio + 1)) * Centers * 2
@@ -26,7 +27,7 @@ func main() {
 
 	var Gear2 gear.Gear
 	Gear2.Pd = (Ratio / (Ratio + 1)) * Centers * 2
-	Gear2.N = DriveTeeth * Ratio
+	Gear2.N = int(math.Floor((float64(DriveTeeth) * Ratio) + 0.5))
 	Gear2.A = PressureAngle
 
 	fmt.Print(Gear1.ToString())

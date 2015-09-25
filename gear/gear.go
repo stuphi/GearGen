@@ -14,12 +14,12 @@ const (
 
 type Gear struct {
   Pd float64 // Pitch Diameter
-  N float64 // Number of teeth
+  N int // Number of teeth
   A float64 // pressure angle
 }
 
 func (g Gear) getDiametricPitch() float64 {
-  return g.N / g.Pd
+  return float64(g.N) / g.Pd
 }
 
 func (g Gear) getClearence() float64 {
@@ -35,7 +35,7 @@ func (g Gear) getDedendum() float64 {
 }
 
 func (g Gear) getOutsideDia() float64 {
-  return (g.N + 2.0) / g.getDiametricPitch()
+  return (float64(g.N) + 2.0) / g.getDiametricPitch()
 }
 
 func (g Gear) getBaseCircleDia() float64 {
@@ -43,11 +43,11 @@ func (g Gear) getBaseCircleDia() float64 {
 }
 
 func (g Gear) getChordalToothThickness() float64 {
-  return g.Pd * math.Sin((90 * DegToRad) / g.N)
+  return g.Pd * math.Sin((90 * DegToRad) / float64(g.N))
 }
 
 func (g Gear) getAngularToothThickness() float64 {
-  return 360 / g.N / 2
+  return 360 / float64(g.N) / 2
 }
 
 func (g Gear) getRootCircleDiameter() float64 {
