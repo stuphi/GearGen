@@ -34,7 +34,7 @@ func (g Gear) getDedendum() float64 {
   return (1.0 + g.getClearence()) / g.getDiametricPitch()
 }
 
-func (g Gear) getOutsideDia() float64 {
+func (g Gear) GetOutsideDia() float64 {
   return (float64(g.N) + 2.0) / g.getDiametricPitch()
 }
 
@@ -70,10 +70,10 @@ func (g Gear) getAlphaAngle() float64 {
  * @return  Return a text description of this gears parameters
  */
 
-func (g Gear) ToString() string {
+func (g Gear) String() string {
   var retval string
   retval += fmt.Sprintf("Pitch Diameter:          %.3f\n", g.Pd)
-  retval += fmt.Sprintf("Outside Diameter:        %.3f\n", g.getOutsideDia())
+  retval += fmt.Sprintf("Outside Diameter:        %.3f\n", g.GetOutsideDia())
   retval += fmt.Sprintf("Diametric Pitch:         %.3f\n", g.getDiametricPitch())
   retval += fmt.Sprintf("Clearance:               %.3f\n", g.getClearence())
   retval += fmt.Sprintf("Addendum:                %.3f\n", g.getAddendum())
