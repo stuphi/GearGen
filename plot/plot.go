@@ -29,6 +29,7 @@ func Plot(g gear.Gear) {
   cntrLen := int(g.GetOutsideDia() * 100 / 8)
   canvas.Line(cx - cntrLen, cy, cx + cntrLen, cy, thinStyle)
   canvas.Line(cx, cy - cntrLen, cx, cy + cntrLen, thinStyle)
+  for
   canvas.Text(width *100 /2, height * 100 /2, "Hello, SVG", "text-anchor:middle;font-size:300;fill:black")
   canvas.End()
   f.Sync()
