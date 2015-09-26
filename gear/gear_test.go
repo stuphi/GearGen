@@ -187,9 +187,9 @@ func TestRootCircleDia(t *testing.T) {
       N: c.inN,
       A: c.inA,
     }
-		got := RoundPlus(g.getRootCircleDiameter(), 3)
+		got := RoundPlus(g.GetRootCircleDiameter(), 3)
 		if got != c.want {
-			t.Errorf("getRootCircleDiameter(Pd %.3f, N %.3f, A %.3f) == %.3f, want %.3f", c.inPd, c.inN, c.inA, got, c.want)
+			t.Errorf("GetRootCircleDiameter(Pd %.3f, N %.3f, A %.3f) == %.3f, want %.3f", c.inPd, c.inN, c.inA, got, c.want)
 		}
 	}
 }

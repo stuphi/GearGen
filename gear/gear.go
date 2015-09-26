@@ -50,7 +50,7 @@ func (g Gear) getAngularToothThickness() float64 {
   return 360 / float64(g.N) / 2
 }
 
-func (g Gear) getRootCircleDiameter() float64 {
+func (g Gear) GetRootCircleDiameter() float64 {
   return g.Pd - (2 * g.getDedendum())
 }
 
@@ -79,7 +79,7 @@ func (g Gear) String() string {
   retval += fmt.Sprintf("Addendum:                %.3f\n", g.getAddendum())
   retval += fmt.Sprintf("Dedendum:                %.3f\n", g.getDedendum())
   retval += fmt.Sprintf("Base Circle Diameter:    %.3f\n", g.getBaseCircleDia())
-  retval += fmt.Sprintf("Root Circle Diameter:    %.3f\n", g.getRootCircleDiameter())
+  retval += fmt.Sprintf("Root Circle Diameter:    %.3f\n", g.GetRootCircleDiameter())
   retval += fmt.Sprintf("Chordal Tooth Thickness: %.3f\n", g.getChordalToothThickness())
   retval += fmt.Sprintf("Angular Tooth Thickness: %.3f\n", g.getAngularToothThickness())
   retval += fmt.Sprintf("Alpha Angle:             %.3f\n", g.getAlphaAngle())
