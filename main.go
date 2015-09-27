@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"math"
-	"strconv"
 	"github.com/stuphi/GearGen/gear"
 	"github.com/stuphi/GearGen/plot"
+	"math"
+	"strconv"
 )
 
 func main() {
@@ -13,8 +13,9 @@ func main() {
 	fmt.Println("#######################")
 
 	var Centers float64 // Distance between Centers
-	var Ratio float64 // Required Ratio
-	var DriveTeeth int // Number of teeth on drive gear
+	var Ratio float64   // Required Ratio
+	var DriveTeeth int  // Number of teeth on drive gear
+	var DrivenTeeth int  // Number of teeth on drive gear
 	var PressureAngle float64
 
 	/*Centers = 150.0
@@ -33,13 +34,13 @@ func main() {
 		Centers = 150.0
 	}
 
-	fmt.Print("Enter Ratio: ")
+/*	fmt.Print("Enter Ratio: ")
 	fmt.Scanln(&input)
 	Ratio, err = strconv.ParseFloat(input, 64)
 	if err != nil {
 		fmt.Println("Didn't understand that. Using 3.0.")
 		Ratio = 3.0
-	}
+	} */
 
 	fmt.Print("Enter Number of Drive Teeth: ")
 	fmt.Scanln(&input)
@@ -48,9 +49,20 @@ func main() {
 	if err != nil {
 		fmt.Println("Didn't understand that. Using 18.")
 		DriveTeeth = 18
-	}else{
+	} else {
 		DriveTeeth = int(tmpTeeth)
 	}
+
+	fmt.Print("Enter Number of Driven Teeth: ")
+	fmt.Scanln(&input)
+	tmpTeeth, err = strconv.ParseInt(input, 10, 32)
+	if err != nil {
+		fmt.Println("Didn't understand that. Using 18.")
+		DrivenTeeth = 18
+	} else {
+		DrivenTeeth = int(tmpTeeth)
+	}
+
 
 	fmt.Print("Enter Pressure Angle: ")
 	fmt.Scanln(&input)
@@ -59,6 +71,8 @@ func main() {
 		fmt.Println("Didn't understand that. Using 20.0.")
 		PressureAngle = 20.0
 	}
+
+	Ratio = float64(DrivenTeeth) / float64(DriveTeeth)
 
 	var Gear1 gear.Gear
 	Gear1.Pd = (1 / (Ratio + 1)) * Centers * 2
@@ -79,8 +93,8 @@ func main() {
 	fmt.Println("################################")
 	fmt.Print(Gear2)
 
-	fmt.Printf("Actual Ratio: %0.4f\n", Gear2.Pd / Gear1.Pd)
+	fmt.Printf("Actual Ratio: %0.4f\n", Gear2.Pd/Gear1.Pd)
 
 	fmt.Println("################################")
-	plot.Plot(Gear1)
+	plot.Plot(Gear1, Gear2)
 }
