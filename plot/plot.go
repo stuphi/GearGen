@@ -35,23 +35,59 @@ func plotGrid(cx int, cy int, width int, height int, canvas *svg.SVG){
   canvas.Grid(gx, gy, gw, gh, spaceing, gridStyle)
 }
 
+func involute_intersect_angle(br, r float64) float64 {
+  return math.Sqrt(math.Pow(r/br, 2) - 1)
+} //= sqrt (pow (radius/base_radius, 2) - 1) * 180 / pi;
+
+func xy_location(br, ang float64) (float64, float64) {
+  x := br*(math.Cos(ang) + ang * math.Sin(ang))
+  y := br*(math.Sin(ang) - ang * math.Cos(ang))
+  return x, y
+}
+
 func plotInvCurve(g gear.Gear, canvas *svg.SVG){
   var px []int
   var py []int
-  var xc, yc float64
+  var x, y float64
+  var r, ang float64
+  br := g.GetBaseCircleDia() * factor / 2
+  or := g.GetOutsideDia() * factor /2
+  rinc := (or - br) / 10
+  for r = br; r<=or; r += rinc {
+    ang = involute_intersect_angle(br, r)
+    x, y = xy_location(br, ang)
+    px = append(px, int(x))
+    py = append(py, int(y))
+  }
+  canvas.Polyline(px, py, solidStyle)
+
+}
+
+/*func plotInvCurve(g gear.Gear, canvas *svg.SVG){
+  var px []int
+  var py []int
+  var xc, yc, rc float64
+  var x, y int
   var ang float64
   var s float64
   r := g.GetBaseCircleDia() * factor / 2
-  for i:=0.0; i<1; i = i + 0.05{
+  for i:=0.0; i<1; i = i + 0.01 {
     ang = i * 90 * DegToRad
     s = (math.Pi * r * i)/2
     xc = r * math.Cos(ang)
     yc = r * math.Sin(ang)
-    px = append(px, int(xc+(s * math.Sin(ang))))
-    py = append(py, int(yc-(s * math.Cos(ang))))
+    x = int(xc+(s * math.Sin(ang)))
+    y = int(yc-(s * math.Cos(ang)))
+    rc = math.Sqrt(math.Pow(float64(x), 2) + math.Pow(float64(y), 2))
+    if rc < (g.GetOutsideDia() * factor / 2) {
+      px = append(px, x)
+      py = append(py, y)
+    } else {
+      i = 1
+    }
   }
   canvas.Polyline(px, py, solidStyle)
-}
+}*/
 
 func plotGear(cx int, cy int, rot float64, g gear.Gear, canvas *svg.SVG){
   canvas.Gtransform(fmt.Sprintf("translate(%d, %d)", cx, cy))
