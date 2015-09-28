@@ -29,26 +29,18 @@ func main() {
 	fmt.Print("Enter Centre Distance: ")
 	fmt.Scanln(&input)
 	Centers, err = strconv.ParseFloat(input, 64)
-	if err != nil {
-		fmt.Println("Didn't understand that. Using 150.")
-		Centers = 150.0
+	if err != nil || Centers == 0 {
+		fmt.Println("Didn't understand that. Using 100.")
+		Centers = 100.0
 	}
-
-/*	fmt.Print("Enter Ratio: ")
-	fmt.Scanln(&input)
-	Ratio, err = strconv.ParseFloat(input, 64)
-	if err != nil {
-		fmt.Println("Didn't understand that. Using 3.0.")
-		Ratio = 3.0
-	} */
 
 	fmt.Print("Enter Number of Drive Teeth: ")
 	fmt.Scanln(&input)
 	var tmpTeeth int64
 	tmpTeeth, err = strconv.ParseInt(input, 10, 32)
-	if err != nil {
-		fmt.Println("Didn't understand that. Using 18.")
-		DriveTeeth = 18
+	if err != nil || tmpTeeth < 2 {
+		fmt.Println("Didn't understand that. Using 14.")
+		DriveTeeth = 14
 	} else {
 		DriveTeeth = int(tmpTeeth)
 	}
@@ -56,9 +48,9 @@ func main() {
 	fmt.Print("Enter Number of Driven Teeth: ")
 	fmt.Scanln(&input)
 	tmpTeeth, err = strconv.ParseInt(input, 10, 32)
-	if err != nil {
-		fmt.Println("Didn't understand that. Using 18.")
-		DrivenTeeth = 18
+	if err != nil || tmpTeeth < 2 {
+		fmt.Println("Didn't understand that. Using 23.")
+		DrivenTeeth = 23
 	} else {
 		DrivenTeeth = int(tmpTeeth)
 	}
@@ -67,9 +59,9 @@ func main() {
 	fmt.Print("Enter Pressure Angle: ")
 	fmt.Scanln(&input)
 	PressureAngle, err = strconv.ParseFloat(input, 64)
-	if err != nil {
-		fmt.Println("Didn't understand that. Using 20.0.")
-		PressureAngle = 20.0
+	if err != nil || PressureAngle == 0 {
+		fmt.Println("Didn't understand that. Using 25.0.")
+		PressureAngle = 25.0
 	}
 
 	Ratio = float64(DrivenTeeth) / float64(DriveTeeth)

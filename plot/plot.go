@@ -9,19 +9,30 @@ import (
 )
 
 const (
-    RadToDeg = 180.0 / math.Pi
-    DegToRad = math.Pi / 180.0
-    RadToGrad = 200.0 / math.Pi
-    GradToDeg = math.Pi / 200.0
-    factor = 100
+  RadToDeg = 180.0 / math.Pi
+  DegToRad = math.Pi / 180.0
+  RadToGrad = 200.0 / math.Pi
+  GradToDeg = math.Pi / 200.0
+  factor = 1000
 )
 
-const (
-  dashStyle = "fill:none; stroke-width:20; stroke:black; stroke-dasharray:300,100,100,100"
-  solidStyle = "fill:none; stroke-width:30; stroke:black"
-  thinStyle = "fill:none; stroke-width:10; stroke:black"
-  gridStyle = "fill:none; stroke-width:10; stroke:lightgrey"
-)
+func style(s string) string {
+  switch s {
+  case "dash":
+    return fmt.Sprintf("fill:none; stroke-width:%d; stroke:black; stroke-dasharray:%d,%d,%d,%d",
+      int(0.2 * factor), 3 * factor, 1 * factor, 1 * factor, 1 * factor)
+  case "solid":
+    return fmt.Sprintf("fill:none; stroke-width:%d; stroke:black",
+      int(0.3 * factor))
+  case "thin":
+    return fmt.Sprintf("fill:none; stroke-width:%d; stroke:black",
+      int(0.1 * factor))
+  case "grid":
+    return fmt.Sprintf("fill:none; stroke-width:%d; stroke:lightgrey",
+      int(0.1 * factor))
+  }
+  return "fill:none; stroke:none"
+}
 
 func plotGrid(cx int, cy int, width int, height int, canvas *svg.SVG){
   spaceing := 5 * factor // 5mm
@@ -32,7 +43,7 @@ func plotGrid(cx int, cy int, width int, height int, canvas *svg.SVG){
   gw := width - (2 * gx)
   gh := height - (2 * gy)
 
-  canvas.Grid(gx, gy, gw, gh, spaceing, gridStyle)
+  canvas.Grid(gx, gy, gw, gh, spaceing, style("grid"))
 }
 
 func involute_intersect_angle(br, r float64) float64 {
@@ -48,63 +59,57 @@ func xy_location(br, ang float64) (float64, float64) {
 func plotInvCurve(g gear.Gear, canvas *svg.SVG){
   var px []int
   var py []int
+  var pyi []int
   var x, y float64
-  var r, ang float64
-  br := g.GetBaseCircleDia() * factor / 2
-  or := g.GetOutsideDia() * factor /2
-  rinc := (or - br) / 10
-  for r = br; r<=or; r += rinc {
+  var r, sr, ang float64
+  var offsetAng float64
+  br := g.GetBaseCircleDia() * factor / 2 // Base Radius
+  or := g.GetOutsideDia() * factor / 2 // Outside Radius
+  rr := g.GetRootCircleDia() * factor / 2 // Root Radius
+  pr := g.Pd * factor / 2 // Pitch Circle Radius
+  ang = involute_intersect_angle(br, pr)
+  x, y = xy_location(br, ang)
+  offsetAng = math.Atan(y / x) * -1
+  offsetAng += (math.Pi / (float64(g.N)/2.0))/-4.0
+  if rr > br {
+    sr = rr
+  }else{
+    sr = br
+  }
+  rinc := (or - sr) / 100
+  for r = sr; r<=or; r += rinc {
     ang = involute_intersect_angle(br, r)
     x, y = xy_location(br, ang)
     px = append(px, int(x))
     py = append(py, int(y))
+    pyi = append(pyi, int(y) * -1)
   }
-  canvas.Polyline(px, py, solidStyle)
+  canvas.Gtransform(fmt.Sprintf("rotate(%0.4f)", offsetAng * RadToDeg))
+  canvas.Polyline(px, py, style("solid"))
+  canvas.Gend()
+  canvas.Gtransform(fmt.Sprintf("rotate(%0.4f)", offsetAng * RadToDeg * -1.0))
+  canvas.Polyline(px, pyi, style("solid"))
+  canvas.Gend()
 
 }
 
-/*func plotInvCurve(g gear.Gear, canvas *svg.SVG){
-  var px []int
-  var py []int
-  var xc, yc, rc float64
-  var x, y int
-  var ang float64
-  var s float64
-  r := g.GetBaseCircleDia() * factor / 2
-  for i:=0.0; i<1; i = i + 0.01 {
-    ang = i * 90 * DegToRad
-    s = (math.Pi * r * i)/2
-    xc = r * math.Cos(ang)
-    yc = r * math.Sin(ang)
-    x = int(xc+(s * math.Sin(ang)))
-    y = int(yc-(s * math.Cos(ang)))
-    rc = math.Sqrt(math.Pow(float64(x), 2) + math.Pow(float64(y), 2))
-    if rc < (g.GetOutsideDia() * factor / 2) {
-      px = append(px, x)
-      py = append(py, y)
-    } else {
-      i = 1
-    }
-  }
-  canvas.Polyline(px, py, solidStyle)
-}*/
-
 func plotGear(cx int, cy int, rot float64, g gear.Gear, canvas *svg.SVG){
   canvas.Gtransform(fmt.Sprintf("translate(%d, %d)", cx, cy))
-  canvas.Circle(0, 0, int(g.GetOutsideDia() * factor / 2), solidStyle)
-  canvas.Circle(0, 0, int(g.Pd * factor / 2), dashStyle)
-  canvas.Circle(0, 0, int(g.GetRootCircleDia() * factor / 2), dashStyle)
-  canvas.Circle(0, 0, int(g.GetBaseCircleDia() * factor / 2), thinStyle)
+  canvas.Circle(0, 0, int(g.GetOutsideDia() * factor / 2), style("solid"))
+  canvas.Circle(0, 0, int(g.Pd * factor / 2), style("dash"))
+  canvas.Circle(0, 0, int(g.GetRootCircleDia() * factor / 2), style("dash"))
+  canvas.Circle(0, 0, int(g.GetBaseCircleDia() * factor / 2), style("thin"))
   cntrLen := int(g.GetOutsideDia() * factor / 8)
-  canvas.Line( -cntrLen, 0, cntrLen, 0, solidStyle)
-  canvas.Line(0, -cntrLen, 0, cntrLen, solidStyle)
+  canvas.Line( -cntrLen, 0, cntrLen, 0, style("solid"))
+  canvas.Line(0, -cntrLen, 0, cntrLen, style("solid"))
   canvas.Gtransform(fmt.Sprintf("rotate(%0.3f)", rot))
   for i := 0; i<g.N; i++ {
+//  for i := 0; i<1; i++ {
     canvas.Line(int((math.Cos((360/float64(g.N))*float64(i)*DegToRad)*g.GetRootCircleDia()*factor/2)),
                 int((math.Sin((360/float64(g.N))*float64(i)*DegToRad)*g.GetRootCircleDia()*factor/2)),
                 int((math.Cos((360/float64(g.N))*float64(i)*DegToRad)*g.GetOutsideDia()*factor/2)),
                 int((math.Sin((360/float64(g.N))*float64(i)*DegToRad)*g.GetOutsideDia()*factor/2)),
-                thinStyle)
+                style("thin"))
     canvas.Gtransform(fmt.Sprintf("rotate(%f)", 360.0/float64(g.N)*float64(i)))
     plotInvCurve(g, canvas)
     canvas.Gend()
@@ -112,8 +117,6 @@ func plotGear(cx int, cy int, rot float64, g gear.Gear, canvas *svg.SVG){
   canvas.Gend()
   canvas.Gend()
 }
-
-
 
 func Plot(g1, g2 gear.Gear) {
   var width, height int
