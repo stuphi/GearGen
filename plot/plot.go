@@ -62,11 +62,11 @@ func plotGrid(cx int, cy int, width int, height int, canvas *svg.SVG){
   canvas.Grid(gx, gy, gw, gh, spaceing, style("grid"))
 }
 
-func involute_intersect_angle(br, r float64) float64 {
+func involuteIntersectAngle(br, r float64) float64 {
   return math.Sqrt(math.Pow(r/br, 2) - 1)
 } //= sqrt (pow (radius/base_radius, 2) - 1) * 180 / pi;
 
-func xy_location(br, ang float64) (float64, float64) {
+func xyLocation(br, ang float64) (float64, float64) {
   x := br*(math.Cos(ang) + ang * math.Sin(ang))
   y := br*(math.Sin(ang) - ang * math.Cos(ang))
   return x, y
@@ -94,8 +94,8 @@ func plotInvCurve(g gear.Gear, canvas *svg.SVG){
   or := g.GetOutsideDia() * factor / 2 // Outside Radius
   rr := g.GetRootCircleDia() * factor / 2 // Root Radius
   pr := g.Pd * factor / 2 // Pitch Circle Radius
-  ang = involute_intersect_angle(br, pr)
-  x, y = xy_location(br, ang)
+  ang = involuteIntersectAngle(br, pr)
+  x, y = xyLocation(br, ang)
   offsetAng = math.Atan(y / x) * -1
   offsetAng += (math.Pi / (float64(g.N)/2.0))/-4.0
   if rr > br {
@@ -105,8 +105,8 @@ func plotInvCurve(g gear.Gear, canvas *svg.SVG){
   }
   rinc := (or - sr) / 100
   for r = sr; r<=or; r += rinc {
-    ang = involute_intersect_angle(br, r)
-    x, y = xy_location(br, ang)
+    ang = involuteIntersectAngle(br, r)
+    x, y = xyLocation(br, ang)
     px = append(px, int(x))
     py = append(py, int(y))
     pyi = append(pyi, int(y) * -1)
