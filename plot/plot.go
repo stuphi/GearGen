@@ -1,4 +1,4 @@
-// GearGen -- Simple utility to generate ger profiles in SVG format
+// GearGen -- Simple utility to generate gear profiles in SVG format
 // Copyright (C) 2015  Philip Stubbs
 //
 // GearGen is free software: you can redistribute it and/or modify
