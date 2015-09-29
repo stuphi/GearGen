@@ -11,3 +11,4 @@ The progrem then plots each gear on a 5mm grid background.
 
 The output currently goes to the the file TestFile.svg A simple script convert.sh is provided to generate a PDF, PNG and JPG version of the plot for esy viewing.
 
+![Example](/Example.png)
