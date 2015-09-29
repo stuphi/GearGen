@@ -2,7 +2,10 @@
 A simple gear profile generator written in go and output to SVG.
 
 ## Install
-Install the app with the the go tool. 
+Install the app source with the the go tool.
+
+    go get github.com/stuphi/GearGen
+    go install github.com/stuphi/GearGen
 
 ##Use
 It will ask for the distance between centers, the number of teeth on drive and driven gear and the pressure angle.
