@@ -50,7 +50,8 @@ func TestDiametricPitch(t *testing.T) {
     }
 		got := g.GetDiametricPitch()
 		if got != c.want {
-			t.Errorf("GetDiametricPitch(Pd %f, N %f, A %f) == %f, want %f", c.inPd, c.inN, c.inA, got, c.want)
+			t.Errorf("GetDiametricPitch(Pd %f, N %f, A %f) == %f, want %f",
+				c.inPd, c.inN, c.inA, got, c.want)
 		}
 	}
 }
@@ -68,7 +69,8 @@ func TestClearence(t *testing.T) {
     }
 		got := g.GetClearence()
 		if got != c.want {
-			t.Errorf("GetClearence(Pd %f, N %f, A %f) == %f, want %f", c.inPd, c.inN, c.inA, got, c.want)
+			t.Errorf("GetClearence(Pd %f, N %f, A %f) == %f, want %f",
+				c.inPd, c.inN, c.inA, got, c.want)
 		}
 	}
 }
@@ -86,7 +88,8 @@ func TestAddendum(t *testing.T) {
 		}
 		got := g.GetAddendum()
 		if got != c.want {
-			t.Errorf("GetAddendum(Pd %f, N %f, A %f) == %f, want %f", c.inPd, c.inN, c.inA, got, c.want)
+			t.Errorf("GetAddendum(Pd %f, N %f, A %f) == %f, want %f",
+				c.inPd, c.inN, c.inA, got, c.want)
 		}
 	}
 }
@@ -104,7 +107,8 @@ func TestDedendum(t *testing.T) {
     }
 		got := g.GetDedendum()
 		if got != c.want {
-			t.Errorf("GetDedendum(Pd %f, N %f, A %f) == %f, want %f", c.inPd, c.inN, c.inA, got, c.want)
+			t.Errorf("GetDedendum(Pd %f, N %f, A %f) == %f, want %f",
+				c.inPd, c.inN, c.inA, got, c.want)
 		}
 	}
 }
@@ -122,7 +126,8 @@ func TestOutsideDia(t *testing.T) {
     }
 		got := g.GetOutsideDia()
 		if got != c.want {
-			t.Errorf("GetOutsideDia(Pd %f, N %f, A %f) == %f, want %f", c.inPd, c.inN, c.inA, got, c.want)
+			t.Errorf("GetOutsideDia(Pd %f, N %f, A %f) == %f, want %f",
+				c.inPd, c.inN, c.inA, got, c.want)
 		}
 	}
 }
@@ -140,7 +145,8 @@ func TestBaseCircleDia(t *testing.T) {
     }
 		got := RoundPlus(g.GetBaseCircleDia(), 3)
 		if got != c.want {
-			t.Errorf("GetBaseCircleDia(Pd %.3f, N %.3f, A %.3f) == %.3f, want %.3f", c.inPd, c.inN, c.inA, got, c.want)
+			t.Errorf("GetBaseCircleDia(Pd %.3f, N %.3f, A %.3f) == %.3f, want %.3f",
+				c.inPd, c.inN, c.inA, got, c.want)
 		}
 	}
 }
@@ -158,7 +164,8 @@ func TestChordalToothThickness(t *testing.T) {
     }
 		got := RoundPlus(g.GetChordalToothThickness(), 3)
 		if got != c.want {
-			t.Errorf("GetChordalToothThickness(Pd %.3f, N %.3f, A %.3f) == %.3f, want %.3f", c.inPd, c.inN, c.inA, got, c.want)
+			t.Errorf("GetChordalToothThickness(Pd %.3f, N %.3f, A %.3f) == %.3f, want %.3f",
+				c.inPd, c.inN, c.inA, got, c.want)
 		}
 	}
 }
@@ -176,7 +183,8 @@ func TestAngularToothThickness(t *testing.T) {
     }
 		got := RoundPlus(g.GetAngularToothThickness(), 3)
 		if got != c.want {
-			t.Errorf("GetAngularToothThickness(Pd %.3f, N %.3f, A %.3f) == %.3f, want %.3f", c.inPd, c.inN, c.inA, got, c.want)
+			t.Errorf("GetAngularToothThickness(Pd %.3f, N %.3f, A %.3f) == %.3f, want %.3f",
+				c.inPd, c.inN, c.inA, got, c.want)
 		}
 	}
 }
@@ -194,7 +202,8 @@ func TestRootCircleDia(t *testing.T) {
     }
 		got := RoundPlus(g.GetRootCircleDia(), 3)
 		if got != c.want {
-			t.Errorf("GetRootCircleDiameter(Pd %.3f, N %.3f, A %.3f) == %.3f, want %.3f", c.inPd, c.inN, c.inA, got, c.want)
+			t.Errorf("GetRootCircleDiameter(Pd %.3f, N %.3f, A %.3f) == %.3f, want %.3f",
+				c.inPd, c.inN, c.inA, got, c.want)
 		}
 	}
 }
@@ -212,7 +221,8 @@ func TestAlphaAngle(t *testing.T) {
     }
 		got := RoundPlus(g.GetAlphaAngle(), 3)
 		if got != c.want {
-			t.Errorf("GetAlphaAngle(Pd %.3f, N %.3f, A %.3f) == %.3f, want %.3f", c.inPd, c.inN, c.inA, got, c.want)
+			t.Errorf("GetAlphaAngle(Pd %.3f, N %.3f, A %.3f) == %.3f, want %.3f",
+				c.inPd, c.inN, c.inA, got, c.want)
 		}
 	}
 }

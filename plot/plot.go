@@ -64,7 +64,7 @@ func plotGrid(cx int, cy int, width int, height int, canvas *svg.SVG){
 
 func involuteIntersectAngle(br, r float64) float64 {
   return math.Sqrt(math.Pow(r/br, 2) - 1)
-} //= sqrt (pow (radius/base_radius, 2) - 1) * 180 / pi;
+}
 
 func xyLocation(br, ang float64) (float64, float64) {
   x := br*(math.Cos(ang) + ang * math.Sin(ang))
@@ -137,16 +137,12 @@ func plotInvCurve(g gear.Gear, canvas *svg.SVG){
 
 func plotGear(cx int, cy int, rot float64, g gear.Gear, canvas *svg.SVG){
   canvas.Gtransform(fmt.Sprintf("translate(%d, %d)", cx, cy))
-  //canvas.Circle(0, 0, int(g.GetOutsideDia() * factor / 2), style("solid"))
   canvas.Circle(0, 0, int(g.Pd * factor / 2), style("dash"))
-  //canvas.Circle(0, 0, int(g.GetRootCircleDia() * factor / 2), style("dash"))
-  //canvas.Circle(0, 0, int(g.GetBaseCircleDia() * factor / 2), style("dash"))
   cntrLen := int(g.GetOutsideDia() * factor / 8)
   canvas.Line( -cntrLen, 0, cntrLen, 0, style("solid"))
   canvas.Line(0, -cntrLen, 0, cntrLen, style("solid"))
   canvas.Gtransform(fmt.Sprintf("rotate(%0.3f)", rot))
   for i := 0; i<g.N; i++ {
-//  for i := 0; i<1; i++ {
     canvas.Line(int((math.Cos((360/float64(g.N))*float64(i)*DegToRad)*g.GetRootCircleDia()*factor/2)),
                 int((math.Sin((360/float64(g.N))*float64(i)*DegToRad)*g.GetRootCircleDia()*factor/2)),
                 int((math.Cos((360/float64(g.N))*float64(i)*DegToRad)*g.GetOutsideDia()*factor/2)),
@@ -160,7 +156,7 @@ func plotGear(cx int, cy int, rot float64, g gear.Gear, canvas *svg.SVG){
   canvas.Gend()
 }
 
-func Plot(g1, g2 gear.Gear) {
+func Plot(g1, g2 gear.Gear, fname string) {
   var width, height int
 
   border := 5.0
@@ -176,11 +172,18 @@ func Plot(g1, g2 gear.Gear) {
   centerDist := (g1.Pd + g2.Pd) / 2
   cx := int((border + (g1.GetOutsideDia() / 2.0)) * factor)
   cy := height * factor / 2
-  f, err := os.Create("TestFile.svg")
-  if err != nil {
-    fmt.Println("Something failed creating file!")
+  var canvas *svg.SVG
+  var f *os.File
+  var err error
+  if fname != "" {
+    f, err = os.Create(fmt.Sprintf("%s.svg", fname))
+    if err != nil {
+      fmt.Println("Something failed creating file!")
+    }
+    canvas = svg.New(f)
+  }else{
+    canvas = svg.New(os.Stdout)
   }
-  canvas := svg.New(f)
 
   // Setup canvas so that each drawing unit is 0.01mm.
   canvas.StartviewUnit(width, height, "mm", 0, 0, width * factor, height * factor)
@@ -195,6 +198,8 @@ func Plot(g1, g2 gear.Gear) {
 
   // canvas.Text(width *100 /2, height * 100 /2, "Hello, SVG", "text-anchor:middle;font-size:300;fill:black")
   canvas.End()
-  f.Sync()
-  f.Close()
+  if f != nil {
+    f.Sync()
+    f.Close()
+  }
 }
