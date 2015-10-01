@@ -30,6 +30,7 @@ func main() {
 	var DriveTeeth int  // Number of teeth on drive gear
 	var DrivenTeeth int  // Number of teeth on drive gear
 	var PressureAngle float64
+	var Rotation int	// Percent of rotation
 	var FileName string  // File name for output.
 
 	var pCenters = flag.Int("c", 100, "Distance between centers. (Whole mm only)")
@@ -37,11 +38,13 @@ func main() {
 	var pDrivenTeeth = flag.Int("n2", 23, "Number of teeth on the second gear")
 	var pPressureAngle = flag.Int("p", 25, "Pressure angle")
 	var pFileName = flag.String("o", "", "Output file name, .svg will be appended. stdout if not given")
+	var pRotation = flag.Int("r", 0, "Rotation as percentage of one tooth")
 	flag.Parse()
 	Centers = float64(*pCenters)
 	DriveTeeth = *pDriveTeeth
 	DrivenTeeth = *pDrivenTeeth
 	PressureAngle = float64(*pPressureAngle)
+	Rotation = *pRotation
 	FileName = *pFileName
 
 	Ratio = float64(DrivenTeeth) / float64(DriveTeeth)
@@ -56,5 +59,5 @@ func main() {
 	Gear2.N = DrivenTeeth
 	Gear2.A = PressureAngle
 
-	plot.Plot(Gear1, Gear2, FileName)
+	plot.Plot(Gear1, Gear2, Rotation, FileName)
 }

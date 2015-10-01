@@ -156,7 +156,7 @@ func plotGear(cx int, cy int, rot float64, g gear.Gear, canvas *svg.SVG){
   canvas.Gend()
 }
 
-func Plot(g1, g2 gear.Gear, fname string) {
+func Plot(g1, g2 gear.Gear, rotfrac int, fname string) {
   var width, height int
 
   border := 5.0
@@ -188,12 +188,15 @@ func Plot(g1, g2 gear.Gear, fname string) {
   // Setup canvas so that each drawing unit is 0.01mm.
   canvas.StartviewUnit(width, height, "mm", 0, 0, width * factor, height * factor)
   plotGrid(cx, cy, width * factor, height * factor, canvas)
-  rot := 0.0
+  rot := 0.0 + ((float64(rotfrac) / 100) * (360 / float64(g1.N)))
   plotGear(cx, cy, rot, g1, canvas)
   cx = cx + int(centerDist * factor)
   if math.Mod(float64(g2.N), 2) == 0{
     rot = 180.0 / float64(g2.N)
+  }else{
+    rot = 0.0
   }
+  rot -= (float64(rotfrac) / 100) * (360 / float64(g2.N))
   plotGear(cx, cy, rot, g2, canvas)
 
   // canvas.Text(width *100 /2, height * 100 /2, "Hello, SVG", "text-anchor:middle;font-size:300;fill:black")
