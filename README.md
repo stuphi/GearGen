@@ -8,10 +8,13 @@ Install the app source with the the go tool.
     go install github.com/stuphi/GearGen
 
 ##Use
-It will ask for the distance between centers, the number of teeth on drive and driven gear and the pressure angle.
 
-The progrem then plots each gear on a 5mm grid background.
+    Geargen -h
 
-The output currently goes to the the file TestFile.svg A simple script convert.sh is provided to generate a PDF, PNG and JPG version of the plot for esy viewing.
+This will provide a summery of the options.
+
+    animation.sh
+    
+This demonstrates one possible use for this program An example output from the script is shown below.
 
 ![](/animation.gif)
