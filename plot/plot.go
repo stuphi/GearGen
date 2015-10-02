@@ -1,4 +1,4 @@
-// GearGen -- Simple utility to generate ger profiles in SVG format
+// GearGen -- Simple utility to generate gear profiles in SVG format
 // Copyright (C) 2015  Philip Stubbs
 //
 // GearGen is free software: you can redistribute it and/or modify
@@ -62,11 +62,11 @@ func plotGrid(cx int, cy int, width int, height int, canvas *svg.SVG){
   canvas.Grid(gx, gy, gw, gh, spaceing, style("grid"))
 }
 
-func involute_intersect_angle(br, r float64) float64 {
+func involuteIntersectAngle(br, r float64) float64 {
   return math.Sqrt(math.Pow(r/br, 2) - 1)
-} //= sqrt (pow (radius/base_radius, 2) - 1) * 180 / pi;
+}
 
-func xy_location(br, ang float64) (float64, float64) {
+func xyLocation(br, ang float64) (float64, float64) {
   x := br*(math.Cos(ang) + ang * math.Sin(ang))
   y := br*(math.Sin(ang) - ang * math.Cos(ang))
   return x, y
@@ -94,8 +94,8 @@ func plotInvCurve(g gear.Gear, canvas *svg.SVG){
   or := g.GetOutsideDia() * factor / 2 // Outside Radius
   rr := g.GetRootCircleDia() * factor / 2 // Root Radius
   pr := g.Pd * factor / 2 // Pitch Circle Radius
-  ang = involute_intersect_angle(br, pr)
-  x, y = xy_location(br, ang)
+  ang = involuteIntersectAngle(br, pr)
+  x, y = xyLocation(br, ang)
   offsetAng = math.Atan(y / x) * -1
   offsetAng += (math.Pi / (float64(g.N)/2.0))/-4.0
   if rr > br {
@@ -105,8 +105,8 @@ func plotInvCurve(g gear.Gear, canvas *svg.SVG){
   }
   rinc := (or - sr) / 100
   for r = sr; r<=or; r += rinc {
-    ang = involute_intersect_angle(br, r)
-    x, y = xy_location(br, ang)
+    ang = involuteIntersectAngle(br, r)
+    x, y = xyLocation(br, ang)
     px = append(px, int(x))
     py = append(py, int(y))
     pyi = append(pyi, int(y) * -1)
@@ -137,16 +137,12 @@ func plotInvCurve(g gear.Gear, canvas *svg.SVG){
 
 func plotGear(cx int, cy int, rot float64, g gear.Gear, canvas *svg.SVG){
   canvas.Gtransform(fmt.Sprintf("translate(%d, %d)", cx, cy))
-  //canvas.Circle(0, 0, int(g.GetOutsideDia() * factor / 2), style("solid"))
   canvas.Circle(0, 0, int(g.Pd * factor / 2), style("dash"))
-  //canvas.Circle(0, 0, int(g.GetRootCircleDia() * factor / 2), style("dash"))
-  //canvas.Circle(0, 0, int(g.GetBaseCircleDia() * factor / 2), style("dash"))
   cntrLen := int(g.GetOutsideDia() * factor / 8)
   canvas.Line( -cntrLen, 0, cntrLen, 0, style("solid"))
   canvas.Line(0, -cntrLen, 0, cntrLen, style("solid"))
   canvas.Gtransform(fmt.Sprintf("rotate(%0.3f)", rot))
   for i := 0; i<g.N; i++ {
-//  for i := 0; i<1; i++ {
     canvas.Line(int((math.Cos((360/float64(g.N))*float64(i)*DegToRad)*g.GetRootCircleDia()*factor/2)),
                 int((math.Sin((360/float64(g.N))*float64(i)*DegToRad)*g.GetRootCircleDia()*factor/2)),
                 int((math.Cos((360/float64(g.N))*float64(i)*DegToRad)*g.GetOutsideDia()*factor/2)),
@@ -160,7 +156,7 @@ func plotGear(cx int, cy int, rot float64, g gear.Gear, canvas *svg.SVG){
   canvas.Gend()
 }
 
-func Plot(g1, g2 gear.Gear) {
+func Plot(g1, g2 gear.Gear, rotfrac int, fname string) {
   var width, height int
 
   border := 5.0
@@ -176,25 +172,37 @@ func Plot(g1, g2 gear.Gear) {
   centerDist := (g1.Pd + g2.Pd) / 2
   cx := int((border + (g1.GetOutsideDia() / 2.0)) * factor)
   cy := height * factor / 2
-  f, err := os.Create("TestFile.svg")
-  if err != nil {
-    fmt.Println("Something failed creating file!")
+  var canvas *svg.SVG
+  var f *os.File
+  var err error
+  if fname != "" {
+    f, err = os.Create(fmt.Sprintf("%s.svg", fname))
+    if err != nil {
+      fmt.Println("Something failed creating file!")
+    }
+    canvas = svg.New(f)
+  }else{
+    canvas = svg.New(os.Stdout)
   }
-  canvas := svg.New(f)
 
   // Setup canvas so that each drawing unit is 0.01mm.
   canvas.StartviewUnit(width, height, "mm", 0, 0, width * factor, height * factor)
   plotGrid(cx, cy, width * factor, height * factor, canvas)
-  rot := 0.0
+  rot := 0.0 + ((float64(rotfrac) / 100) * (360 / float64(g1.N)))
   plotGear(cx, cy, rot, g1, canvas)
   cx = cx + int(centerDist * factor)
   if math.Mod(float64(g2.N), 2) == 0{
     rot = 180.0 / float64(g2.N)
+  }else{
+    rot = 0.0
   }
+  rot -= (float64(rotfrac) / 100) * (360 / float64(g2.N))
   plotGear(cx, cy, rot, g2, canvas)
 
   // canvas.Text(width *100 /2, height * 100 /2, "Hello, SVG", "text-anchor:middle;font-size:300;fill:black")
   canvas.End()
-  f.Sync()
-  f.Close()
+  if f != nil {
+    f.Sync()
+    f.Close()
+  }
 }

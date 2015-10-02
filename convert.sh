@@ -15,6 +15,6 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-inkscape --without-gui --file TestFile.svg --export-png=TestFile.png
+inkscape --without-gui --file TestFile.svg --export-dpi=300 --export-png=TestFile.png
 inkscape --without-gui --file TestFile.svg --export-pdf=TestFile.pdf
 convert TestFile.png -flatten TestFile.jpg
