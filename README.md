@@ -9,7 +9,7 @@ Install the app source with the the go tool.
 
 ##Use
 
-    Geargen -h
+    GearGen -h
 
 This will provide a summery of the options.
 
