@@ -1,5 +1,6 @@
 #!/bin/bash
-#     convert.sh -- Simple utility to generate alternative formats of TestFile
+#     genexample.sh -- Simple utility to generate alternative formats of example
+#     file
 #     Copyright (C) 2015  Philip Stubbs
 #
 #     This program is free software: you can redistribute it and/or modify
@@ -15,6 +16,8 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-inkscape --without-gui --file TestFile.svg --export-dpi=300 --export-png=TestFile.png
-inkscape --without-gui --file TestFile.svg --export-pdf=TestFile.pdf
-convert TestFile.png -flatten TestFile.jpg
+GearGen -o Example
+inkscape --without-gui --file Example.svg --export-dpi=300 \
+  --export-png=Example.png &>/dev/null
+inkscape --without-gui --file Example.svg --export-pdf=Example.pdf &>/dev/null
+convert Example.png -flatten Example.jpg

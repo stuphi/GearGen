@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 package main
 
 import (
@@ -28,10 +27,10 @@ func main() {
 	var Centers float64 // Distance between Centers
 	var Ratio float64   // Required Ratio
 	var DriveTeeth int  // Number of teeth on drive gear
-	var DrivenTeeth int  // Number of teeth on drive gear
+	var DrivenTeeth int // Number of teeth on drive gear
 	var PressureAngle float64
-	var Rotation int	// Percent of rotation
-	var FileName string  // File name for output.
+	var Rotation int    // Percent of rotation
+	var FileName string // File name for output.
 
 	var pCenters = flag.Int("c", 100, "Distance between centers. (Whole mm only)")
 	var pDriveTeeth = flag.Int("n1", 7, "Number of teeth on the first gear")
