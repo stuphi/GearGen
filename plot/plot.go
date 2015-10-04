@@ -53,6 +53,10 @@ func style(s string) string {
 	case "grid":
 		return fmt.Sprintf("fill:none; stroke-width:%d; stroke:lightgrey",
 			int(0.1*factor))
+	case "anott":
+		return fmt.Sprintf("text-anchor:middle;font-size:%d;fill:black",
+			int(5*factor))
+
 	}
 	return "fill:none; stroke:none"
 }
@@ -192,6 +196,7 @@ func Plot(g1, g2 gear.Gear, rotfrac int, fname string) {
 
 	border := 5.0
 
+	// Determin the size of our canvas.
 	if g1.Pd > g2.Pd {
 		height = int(g1.GetOutsideDia() + (2 * border))
 	} else {
@@ -206,13 +211,16 @@ func Plot(g1, g2 gear.Gear, rotfrac int, fname string) {
 	var canvas *svg.SVG
 	var f *os.File
 	var err error
+	// If we are writing to file, open the file or quit if there is an error.
 	if fname != "" {
 		f, err = os.Create(fmt.Sprintf("%s.svg", fname))
 		if err != nil {
 			fmt.Println("Something failed creating file!")
+			os.Exit(1)
 		}
 		canvas = svg.New(f)
 	} else {
+		// If we are not using a file, send output to stdout.
 		canvas = svg.New(os.Stdout)
 	}
 
@@ -231,8 +239,10 @@ func Plot(g1, g2 gear.Gear, rotfrac int, fname string) {
 	rot -= (float64(rotfrac) / 100) * (360 / float64(g2.N))
 	plotGear(cx, cy, rot, g2, canvas)
 
-	// canvas.Text(width *100 /2, height * 100 /2, "Hello, SVG", "text-anchor:middle;font-size:300;fill:black")
+	canvas.Text(width * factor / 2, height * factor / 2, "This is a test.",
+		style("anott"))
 	canvas.End()
+	// Cleanly close file, if we are writing to file.
 	if f != nil {
 		f.Sync()
 		f.Close()
