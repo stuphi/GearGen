@@ -20,6 +20,7 @@ package main
 
 import (
 	"flag"
+	"strconv"
 	"github.com/stuphi/GearGen/gear"
 	"github.com/stuphi/GearGen/plot"
 )
@@ -31,6 +32,7 @@ func main() {
 	var DriveTeeth int  // Number of teeth on drive gear
 	var DrivenTeeth int // Number of teeth on drive gear
 	var PressureAngle float64
+	var Backlash float64
 	var Rotation int    // Percent of rotation
 	var FileName string // File name for output.
 
@@ -38,6 +40,7 @@ func main() {
 	var pDriveTeeth = flag.Int("n1", 7, "Number of teeth on the first gear")
 	var pDrivenTeeth = flag.Int("n2", 23, "Number of teeth on the second gear")
 	var pPressureAngle = flag.Int("p", 25, "Pressure angle")
+	var pBacklash = flag.String("b", "0.5", "Backlash angle (degrees)")
 	var pFileName = flag.String("o", "", "Output file name, .svg will be appended. stdout if not given")
 	var pRotation = flag.Int("r", 0, "Rotation as percentage of one tooth")
 	flag.Parse()
@@ -45,6 +48,11 @@ func main() {
 	DriveTeeth = *pDriveTeeth
 	DrivenTeeth = *pDrivenTeeth
 	PressureAngle = float64(*pPressureAngle)
+	var err error
+	Backlash, err = strconv.ParseFloat(*pBacklash, 64)
+	if err != nil {
+		Backlash = 0.0
+	}
 	Rotation = *pRotation
 	FileName = *pFileName
 
@@ -54,11 +62,13 @@ func main() {
 	Gear1.Pd = (1 / (Ratio + 1)) * Centres * 2
 	Gear1.N = DriveTeeth
 	Gear1.A = PressureAngle
+	Gear1.B = Backlash
 
 	var Gear2 gear.Gear
 	Gear2.Pd = (Ratio / (Ratio + 1)) * Centres * 2
 	Gear2.N = DrivenTeeth
 	Gear2.A = PressureAngle
+	Gear2.B = Backlash
 
 	plot.Plot(Gear1, Gear2, Rotation, FileName)
 }

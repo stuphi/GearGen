@@ -34,6 +34,7 @@ type Gear struct {
 	Pd float64 // Pitch Diameter
 	N  int     // Number of teeth
 	A  float64 // pressure angle
+	B  float64 // backlash angle
 }
 
 // Calculate and return the diametric pitch
